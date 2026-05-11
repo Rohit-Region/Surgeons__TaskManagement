@@ -83,9 +83,9 @@ export default function UserDashboard() {
 
   const fetchTasks = useCallback(async () => {
     setLoad(true);
-    try { setTasks(await listTasks()); } catch {}
+    try { setTasks(await listTasks(user?.userId, user?.role)); } catch {}
     finally { setLoad(false); }
-  }, []);
+  }, [user]);
 
   useEffect(() => { fetchTasks(); }, [fetchTasks]);
 

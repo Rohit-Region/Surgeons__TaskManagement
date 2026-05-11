@@ -40,9 +40,9 @@ export default function AdminDashboard() {
 
   const fetchTasks = useCallback(async () => {
     setLT(true);
-    try { setTasks(await listTasks()); } catch {}
+    try { setTasks(await listTasks(user?.userId, user?.role || 'admin')); } catch {}
     finally { setLT(false); }
-  }, []);
+  }, [user]);
 
   useEffect(() => { fetchUsers(); fetchTasks(); }, [fetchUsers, fetchTasks]);
 

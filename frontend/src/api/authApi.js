@@ -1,4 +1,12 @@
-import apiClient from './client';
+import apiClient, { checkBackend, setBackendOnline } from './client';
+import { demoLogin, seedDemoData } from './demoStore';
 
-export const login = (username, password) =>
-  apiClient.post('/login', { username, password }).then((r) => r.data);
+export async function login(username, password) {
+  const online = await checkBackend();
+  if (!online) {
+    seedDemoData();
+    setBackendOnline(false);
+    return demoLogin(username, password);
+  }
+  return apiClient.post('/login', { username, password }).then((r) => r.data);
+}

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { login as loginApi } from '../api/authApi';
+import { checkBackend, isBackendOnline } from '../api/client';
+import { seedDemoData } from '../api/demoStore';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -11,6 +13,16 @@ export default function LoginPage() {
   const [error, setError]       = useState('');
   const [loading, setLoading]   = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [demoMode, setDemoMode] = useState(false);
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    checkBackend().then((online) => {
+      setDemoMode(!online);
+      setChecking(false);
+      if (!online) seedDemoData();
+    });
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -49,6 +61,21 @@ export default function LoginPage() {
 
         <h1 style={s.title}>Welcome back</h1>
         <p style={s.subtitle}>Sign in to your Task Management workspace</p>
+
+        {/* Demo mode banner */}
+        {demoMode && (
+          <div style={{
+            background: 'rgba(245,158,11,0.12)',
+            border: '1px solid rgba(245,158,11,0.3)',
+            borderRadius: 10, padding: '12px 14px',
+            fontSize: '0.8rem', color: '#FCD34D',
+            marginBottom: 20, lineHeight: 1.8,
+          }}>
+            <strong>⚡ Demo Mode</strong> — Backend offline. Using local data.<br/>
+            <span style={{ color: '#94A3B8' }}>Admin:</span> <code style={{ color: '#FCD34D' }}>admin / admin123</code><br/>
+            <span style={{ color: '#94A3B8' }}>User &nbsp;:</span> <code style={{ color: '#FCD34D' }}>Rohit / 123456</code>
+          </div>
+        )}
 
         {error && (
           <div style={s.errorBox} role="alert">

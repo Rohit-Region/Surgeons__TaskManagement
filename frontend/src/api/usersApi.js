@@ -1,5 +1,17 @@
-import apiClient from './client';
+import apiClient, { isBackendOnline } from './client';
+import { demoListUsers, demoCreateUser, demoDeleteUser } from './demoStore';
 
-export const createUser = (data) => apiClient.post('/users', data).then((r) => r.data);
-export const listUsers = () => apiClient.get('/users').then((r) => r.data);
-export const deleteUser = (id) => apiClient.delete(`/users/${id}`);
+export function listUsers() {
+  if (isBackendOnline() === false) return Promise.resolve(demoListUsers());
+  return apiClient.get('/users').then((r) => r.data);
+}
+
+export function createUser(data) {
+  if (isBackendOnline() === false) return Promise.resolve(demoCreateUser(data));
+  return apiClient.post('/users', data).then((r) => r.data);
+}
+
+export function deleteUser(id) {
+  if (isBackendOnline() === false) { demoDeleteUser(id); return Promise.resolve(); }
+  return apiClient.delete(`/users/${id}`);
+}
