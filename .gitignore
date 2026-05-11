@@ -22,5 +22,5 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Kiro spec internals (optional — remove if you want to track specs)
-# .kiro/
+# Kiro IDE files
+.kiro/
