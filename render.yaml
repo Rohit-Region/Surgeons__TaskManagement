@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: surgeons-task-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRY
+        value: 8h
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: PORT
+        value: 4000
